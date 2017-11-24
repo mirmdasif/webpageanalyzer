@@ -9,8 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static com.webpageanalyzer.web.TestUtils.testGetRequestView;
 
 /**
  * @since 11/24/17.
@@ -24,7 +23,6 @@ public class HomeControllerIntegrationTest {
 
     @Test
     public void onGetRequestReturnHomePage() throws Exception {
-        mockMvc.perform(get("/"))
-                .andExpect(view().name("home"));
+        testGetRequestView(mockMvc, "/", "home");
     }
 }
