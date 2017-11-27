@@ -25,7 +25,7 @@ Testing
       
 Running
 --------
-  - Run the following command to run the project locally.
+  - From the project directory run the following command to run the project locally.
      ```./gradlew bootRun``` 
      
 Test Url
