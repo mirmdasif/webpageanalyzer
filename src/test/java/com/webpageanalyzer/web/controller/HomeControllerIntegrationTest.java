@@ -23,6 +23,6 @@ public class HomeControllerIntegrationTest {
 
     @Test
     public void onGetRequestReturnHomePage() throws Exception {
-        testGetRequestView(mockMvc, "/", "home");
+        testGetRequestView(mockMvc, "/", "form");
     }
 }

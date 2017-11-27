@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>WebPage Analyzer</title>
+</head>
+<body>
+    <form method="post" th:object="${webPageDetailsCmd}">
+        <input placeholder="http://www.example.com" th:field="*{url}"/>
+        <input type="submit"/>
+        <ul>
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}" />
+        </ul>
+    </form>
+    <h1 th:text="${webPageDetailsCmd.url}">Url</h1>
+    <h1 th:text="${webPageDetailsCmd.htmlVersion}">mocking text</h1>
+    <h1 th:text="${webPageDetailsCmd.title}">mocking text</h1>
+
+    <table>
+        <thead>
+            <th>
+                Heading Level
+            </th>
+            <th>
+                Heading Count
+            </th>
+        </thead>
+        <tbody>
+                <tr th:each="heading : ${webPageDetailsCmd.headers}">
+                    <td th:text="${heading.key}"></td>
+                    <td th:text="${heading.value}"></td>
+                </tr>
+        </tbody>
+    </table>
+
+    <h1>Has Login Page : <span th:text="${webPageDetailsCmd.loginPage}"></span></h1>
+
+    <h1>Links</h1>
+    <div th:each="link : ${webPageDetailsCmd.links}">
+        <a th:text="${link}"></a>
+    </div>
+
+    <h1>Internal Links</h1>
+    <div th:each="link : ${webPageDetailsCmd.sameDomainlinks}">
+        <a th:text="${link}"></a>
+    </div>
+
+    <h1>External Links</h1>
+    <div th:each="link : ${webPageDetailsCmd.externalLinks}">
+        <a th:text="${link}"></a>
+    </div>
+</body>
+</html>

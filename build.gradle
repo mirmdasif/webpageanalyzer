@@ -24,7 +24,21 @@ repositories {
 
 
 dependencies {
+
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+
+	// Http client for fetching remote html
+	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
+
+	// Jsoup library for parsing html
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.8.3'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools
+    compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '1.3.0.RELEASE'
+
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+
+
 }
