@@ -1,20 +1,26 @@
 package com.webpageanalyzer.sevice;
 
 import com.webpageanalyzer.utils.UrlUtils;
+import com.webpageanalyzer.web.command.LinkDetails;
 import com.webpageanalyzer.web.command.WebPageDetailsCmd;
 import com.webpageanalyzer.web.enums.Headings;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.DocumentType;
 import org.jsoup.nodes.Node;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Service
 public class JsoupHtmlAnalyzer implements HtmlAnalyzer {
+
+    @Autowired
+    HttpTemplate httpTemplate;
 
     @Override
     public WebPageDetailsCmd analyzeHtml(String html, String baseUrl) {
@@ -28,7 +34,7 @@ public class JsoupHtmlAnalyzer implements HtmlAnalyzer {
         List<String> urls = getHyperMediaLinks(document);
         cmd.setLinks(urls);
 
-        cmd.setSameDomainlinks(urls.
+        cmd.setSameDomainLinks(urls.
                 stream().
                 filter(str -> UrlUtils.isSameDomainUrl(str, document.baseUri())).collect(Collectors.toList()));
 
@@ -36,20 +42,22 @@ public class JsoupHtmlAnalyzer implements HtmlAnalyzer {
                 stream().
                 filter(str -> !UrlUtils.isSameDomainUrl(str, document.baseUri())).collect(Collectors.toList()));
 
+        cmd.setLinkDetails(getLinkDetails(urls));
+
         return cmd;
     }
 
     private String getHtmlVersion(Document document) {
+        String version = "";
         for (Node node : document.childNodes()) {
             if (node instanceof DocumentType) {
                 DocumentType documentType = (DocumentType) node;
-                String version = documentType.attr("publicid");
-
-                return version.equals("") ? "HTML 5" : version;
+                version = documentType.attr("publicid");
+                break;
             }
         }
 
-        return "";
+        return version.equals("") ? "HTML 5" : version;
     }
 
     String getTitle(Document document) {
@@ -58,7 +66,7 @@ public class JsoupHtmlAnalyzer implements HtmlAnalyzer {
 
     Map<Headings, Integer> getHeadingsCountByGroup(Document document) {
         Map<Headings, Integer> headingCounts = new LinkedHashMap<>();
-        for(Headings heading : Headings.values()) {
+        for (Headings heading : Headings.values()) {
             headingCounts.put(heading, document.select(heading.name()).size());
         }
 
@@ -77,11 +85,23 @@ public class JsoupHtmlAnalyzer implements HtmlAnalyzer {
         List<String> links = new LinkedList<>();
         document.select("a[href]").forEach(link -> {
             String href = link.attr("abs:href");
-            if(!StringUtils.isEmpty(href)) {
+            if (!StringUtils.isEmpty(href)) {
                 links.add(href);
             }
         });
 
         return links;
+    }
+
+    List<LinkDetails> getLinkDetails(List<String> links) {
+        List<LinkDetails> linkDetails = new ArrayList<>(links.size());
+        links.parallelStream().forEach(new Consumer<String>() {
+            @Override
+            public void accept(String url) {
+                linkDetails.add(new LinkDetails(url, httpTemplate.getStatusCode(url)));
+            }
+        });
+
+        return linkDetails;
     }
 }

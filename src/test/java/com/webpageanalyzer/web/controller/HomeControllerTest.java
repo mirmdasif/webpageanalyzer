@@ -1,5 +1,6 @@
 package com.webpageanalyzer.web.controller;
 
+import com.webpageanalyzer.exceptions.UrlProcessingException;
 import com.webpageanalyzer.sevice.HtmlAnalyzer;
 import com.webpageanalyzer.sevice.HttpTemplate;
 import com.webpageanalyzer.web.command.WebPageDetailsCmd;

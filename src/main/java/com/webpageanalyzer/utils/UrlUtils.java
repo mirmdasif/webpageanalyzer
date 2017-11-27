@@ -3,7 +3,6 @@ package com.webpageanalyzer.utils;
 import com.google.common.net.InternetDomainName;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 public class UrlUtils {
 
@@ -14,9 +13,11 @@ public class UrlUtils {
 
            return InternetDomainName.from(uri.getHost()).topPrivateDomain()
                     .equals(InternetDomainName.from(uri2.getHost()).topPrivateDomain());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return false;
     }
 }

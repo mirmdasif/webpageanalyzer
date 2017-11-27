@@ -4,6 +4,7 @@ import com.webpageanalyzer.web.enums.Headings;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,8 +19,10 @@ public class WebPageDetailsCmd {
     private Map<Headings, Integer> headers;
     private boolean loginPage;
     private List<String> links;
-    private List<String> sameDomainlinks;
-    private List<String> externalLinks;
+    private List<String> sameDomainLinks = new ArrayList<>();
+    private List<String> externalLinks = new ArrayList<>();
+
+    private List<LinkDetails> linkDetails = new ArrayList<>();
 
     public String getUrl() {
         return url;
@@ -69,12 +72,12 @@ public class WebPageDetailsCmd {
         this.links = links;
     }
 
-    public List<String> getSameDomainlinks() {
-        return sameDomainlinks;
+    public List<String> getSameDomainLinks() {
+        return sameDomainLinks;
     }
 
-    public void setSameDomainlinks(List<String> sameDomainlinks) {
-        this.sameDomainlinks = sameDomainlinks;
+    public void setSameDomainLinks(List<String> sameDomainLinks) {
+        this.sameDomainLinks = sameDomainLinks;
     }
 
     public List<String> getExternalLinks() {
@@ -83,6 +86,14 @@ public class WebPageDetailsCmd {
 
     public void setExternalLinks(List<String> externalLinks) {
         this.externalLinks = externalLinks;
+    }
+
+    public List<LinkDetails> getLinkDetails() {
+        return linkDetails;
+    }
+
+    public void setLinkDetails(List<LinkDetails> linkDetails) {
+        this.linkDetails = linkDetails;
     }
 
     @Override

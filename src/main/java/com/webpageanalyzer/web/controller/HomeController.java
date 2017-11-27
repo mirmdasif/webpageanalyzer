@@ -2,14 +2,17 @@ package com.webpageanalyzer.web.controller;
 
 import com.webpageanalyzer.sevice.HtmlAnalyzer;
 import com.webpageanalyzer.sevice.HttpTemplate;
+import com.webpageanalyzer.exceptions.UrlProcessingException;
 import com.webpageanalyzer.web.command.WebPageDetailsCmd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -40,13 +43,12 @@ public class HomeController {
                              BindingResult result,
                              ModelMap model)
 
-            throws IOException {
+            throws IOException, UrlProcessingException {
 
         if(!result.hasErrors()) {
             String html = httpTemplate.getHtml(webPageDetailsCmd.getUrl());
             model.put(CMD_NAME, htmlAnalyzer.analyzeHtml(html, webPageDetailsCmd.getUrl()));
         }
-
 
         return VIEW_NAME;
     }

@@ -40,14 +40,15 @@
         <a th:text="${link}"></a>
     </div>
 
-    <h1>Internal Links</h1>
-    <div th:each="link : ${webPageDetailsCmd.sameDomainlinks}">
-        <a th:text="${link}"></a>
+    <div th:if="${not #lists.isEmpty(webPageDetailsCmd.sameDomainLinks)}">
+        <h1>Number Of Internal Links</h1>
+        <a th:text="${#lists.size(webPageDetailsCmd.sameDomainLinks)}"></a>
     </div>
 
-    <h1>External Links</h1>
-    <div th:each="link : ${webPageDetailsCmd.externalLinks}">
-        <a th:text="${link}"></a>
+
+    <div th:if="${not #lists.isEmpty(webPageDetailsCmd.sameDomainLinks)}">
+        <h1>Number Of Internal Links</h1>
+        <a th:text="${#lists.size(webPageDetailsCmd.externalLinks)}"></a>
     </div>
 </body>
 </html>
