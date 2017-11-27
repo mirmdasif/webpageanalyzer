@@ -38,6 +38,7 @@ Assumptions
  - hpermedia links are are those which satsify css query a\[href\]
  - When calculating internal links subdomains were not considered. That means blog.github.com and api.github.com both are internal to www.github.com  
  - Links are unreachable if http(s) status code is different then 2XX or 3XX 
+ 
 Design Decision
 ----------------
  - Login Page
