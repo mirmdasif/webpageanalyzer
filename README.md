@@ -48,6 +48,7 @@ Design Decision
 Enhancement
 -----------
   - Used connection pooling feature of HTTP Template, and Parallal Stream for testing the links availabily.
+  
 Constraints
 ------------
   - Since synchronus checking is done it took a lot of time to analyze if the page contains a lot of links.
