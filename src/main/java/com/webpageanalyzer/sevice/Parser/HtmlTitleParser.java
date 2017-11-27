@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class HtmlTitleParser implements JsoupDocumentParser {
+
     @Override
     public void parse(Document document, WebPageDetailsCmd cmd) {
         cmd.setTitle(getTitle(document));

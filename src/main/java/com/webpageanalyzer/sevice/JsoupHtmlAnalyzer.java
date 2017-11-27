@@ -1,19 +1,18 @@
 package com.webpageanalyzer.sevice;
 
-import com.webpageanalyzer.sevice.Parser.HtmlTitleParser;
-import com.webpageanalyzer.sevice.Parser.HtmlVersionParser;
+import com.webpageanalyzer.sevice.Parser.JsoupDocumentParser;
 import com.webpageanalyzer.utils.UrlUtils;
 import com.webpageanalyzer.web.command.LinkDetails;
 import com.webpageanalyzer.web.command.WebPageDetailsCmd;
-import com.webpageanalyzer.web.enums.Headings;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,10 +22,7 @@ public class JsoupHtmlAnalyzer implements HtmlAnalyzer {
     private HttpTemplate httpTemplate;
 
     @Autowired
-    private HtmlVersionParser versionParser;
-
-    @Autowired
-    private HtmlTitleParser titleParser;
+    List<JsoupDocumentParser> parsers;
 
     @Override
     public WebPageDetailsCmd analyzeHtml(String html, String baseUrl) {
@@ -34,10 +30,11 @@ public class JsoupHtmlAnalyzer implements HtmlAnalyzer {
 
         Document document = Jsoup.parse(html, baseUrl);
         cmd.setUrl(baseUrl);
-        versionParser.parse(document, cmd);
-        titleParser.parse(document, cmd);
-        cmd.setHeaders(getHeadingsCountByGroup(document));
-        cmd.setLoginPage(hasLoginPage(document));
+
+        for (JsoupDocumentParser parser : parsers) {
+            parser.parse(document, cmd);
+        }
+
         List<String> urls = getHyperMediaLinks(document);
         cmd.setLinks(urls);
 
@@ -54,23 +51,6 @@ public class JsoupHtmlAnalyzer implements HtmlAnalyzer {
         return cmd;
     }
 
-    Map<Headings, Integer> getHeadingsCountByGroup(Document document) {
-        Map<Headings, Integer> headingCounts = new LinkedHashMap<>();
-        for (Headings heading : Headings.values()) {
-            headingCounts.put(heading, document.select(heading.name()).size());
-        }
-
-        return headingCounts;
-    }
-
-    boolean hasLoginPage(Document document) {
-        return document.select("form")
-                .stream()
-                .filter(form -> form.select("input[type=text]").size() > 0
-                        && form.select("input[type=password]").size() > 0)
-                .count() > 0;
-    }
-
     List<String> getHyperMediaLinks(Document document) {
         List<String> links = new LinkedList<>();
         document.select("a[href]").forEach(link -> {
@@ -85,14 +65,10 @@ public class JsoupHtmlAnalyzer implements HtmlAnalyzer {
 
     List<LinkDetails> getLinkDetails(List<String> links) {
         List<LinkDetails> linkDetails = new ArrayList<>(links.size());
-        links.parallelStream().forEach(new Consumer<String>() {
+        links.parallelStream().forEach(url -> {
+            int code = httpTemplate.getStatusCode(url);
 
-            @Override
-            public void accept(String url) {
-                int code = httpTemplate.getStatusCode(url);
-
-                linkDetails.add(new LinkDetails(url, code >= 200 && code < 400 , code));
-            }
+            linkDetails.add(new LinkDetails(url, code >= 200 && code < 400, code));
         });
 
         return linkDetails;
