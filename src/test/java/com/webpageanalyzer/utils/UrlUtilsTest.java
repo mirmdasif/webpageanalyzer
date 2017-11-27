@@ -17,7 +17,7 @@ public class UrlUtilsTest {
     }
 
     @Test
-    void testDifferentDomain() {
+    public void testDifferentDomain() {
         Assert.assertFalse(UrlUtils.isSameDomainUrl("https://stackoverflow.com/jobs?med=site-ui&ref=jobs-tab",
                 "https://chat.stackexchange.com"));
     }

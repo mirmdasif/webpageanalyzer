@@ -1,13 +1,13 @@
 package com.webpageanalyzer.sevice;
 
+import com.webpageanalyzer.sevice.Parser.HtmlTitleParser;
+import com.webpageanalyzer.sevice.Parser.HtmlVersionParser;
 import com.webpageanalyzer.utils.UrlUtils;
 import com.webpageanalyzer.web.command.LinkDetails;
 import com.webpageanalyzer.web.command.WebPageDetailsCmd;
 import com.webpageanalyzer.web.enums.Headings;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.DocumentType;
-import org.jsoup.nodes.Node;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -20,7 +20,13 @@ import java.util.stream.Collectors;
 public class JsoupHtmlAnalyzer implements HtmlAnalyzer {
 
     @Autowired
-    HttpTemplate httpTemplate;
+    private HttpTemplate httpTemplate;
+
+    @Autowired
+    private HtmlVersionParser versionParser;
+
+    @Autowired
+    private HtmlTitleParser titleParser;
 
     @Override
     public WebPageDetailsCmd analyzeHtml(String html, String baseUrl) {
@@ -28,8 +34,8 @@ public class JsoupHtmlAnalyzer implements HtmlAnalyzer {
 
         Document document = Jsoup.parse(html, baseUrl);
         cmd.setUrl(baseUrl);
-        cmd.setHtmlVersion(getHtmlVersion(document));
-        cmd.setTitle(getTitle(document));
+        versionParser.parse(document, cmd);
+        titleParser.parse(document, cmd);
         cmd.setHeaders(getHeadingsCountByGroup(document));
         cmd.setLoginPage(hasLoginPage(document));
         List<String> urls = getHyperMediaLinks(document);
@@ -46,23 +52,6 @@ public class JsoupHtmlAnalyzer implements HtmlAnalyzer {
         cmd.setLinkDetails(getLinkDetails(urls));
 
         return cmd;
-    }
-
-    private String getHtmlVersion(Document document) {
-        for (Node node : document.childNodes()) {
-            if (node instanceof DocumentType) {
-                String version = "";
-                DocumentType documentType = (DocumentType) node;
-                version = documentType.attr("publicid");
-                return version.equals("") ? "HTML 5" : version;
-            }
-        }
-
-        return "";
-    }
-
-    String getTitle(Document document) {
-        return document.title();
     }
 
     Map<Headings, Integer> getHeadingsCountByGroup(Document document) {
