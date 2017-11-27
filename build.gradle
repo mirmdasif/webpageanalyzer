@@ -34,11 +34,11 @@ dependencies {
 
 	// Jsoup library for parsing html
     compile group: 'org.jsoup', name: 'jsoup', version: '1.8.3'
-    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools
-    compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '1.3.0.RELEASE'
 
     // https://mvnrepository.com/artifact/com.google.guava/guava
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
 
+	// Bootstrap
+	compile group: 'org.webjars', name: 'bootstrap', version: '3.3.5'
 
 }

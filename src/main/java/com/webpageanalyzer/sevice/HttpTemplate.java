@@ -1,6 +1,5 @@
 package com.webpageanalyzer.sevice;
 
-import com.webpageanalyzer.exceptions.UrlProcessingException;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -39,6 +38,6 @@ public class HttpTemplate {
             e.printStackTrace();
         }
 
-        return -1;
+        return 400;
     }
 }

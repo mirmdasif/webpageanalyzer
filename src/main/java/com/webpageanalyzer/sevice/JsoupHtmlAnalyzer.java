@@ -27,6 +27,7 @@ public class JsoupHtmlAnalyzer implements HtmlAnalyzer {
         WebPageDetailsCmd cmd = new WebPageDetailsCmd();
 
         Document document = Jsoup.parse(html, baseUrl);
+        cmd.setUrl(baseUrl);
         cmd.setHtmlVersion(getHtmlVersion(document));
         cmd.setTitle(getTitle(document));
         cmd.setHeaders(getHeadingsCountByGroup(document));
@@ -48,16 +49,16 @@ public class JsoupHtmlAnalyzer implements HtmlAnalyzer {
     }
 
     private String getHtmlVersion(Document document) {
-        String version = "";
         for (Node node : document.childNodes()) {
             if (node instanceof DocumentType) {
+                String version = "";
                 DocumentType documentType = (DocumentType) node;
                 version = documentType.attr("publicid");
-                break;
+                return version.equals("") ? "HTML 5" : version;
             }
         }
 
-        return version.equals("") ? "HTML 5" : version;
+        return "";
     }
 
     String getTitle(Document document) {
@@ -96,9 +97,12 @@ public class JsoupHtmlAnalyzer implements HtmlAnalyzer {
     List<LinkDetails> getLinkDetails(List<String> links) {
         List<LinkDetails> linkDetails = new ArrayList<>(links.size());
         links.parallelStream().forEach(new Consumer<String>() {
+
             @Override
             public void accept(String url) {
-                linkDetails.add(new LinkDetails(url, httpTemplate.getStatusCode(url)));
+                int code = httpTemplate.getStatusCode(url);
+
+                linkDetails.add(new LinkDetails(url, code >= 200 && code < 400 , code));
             }
         });
 

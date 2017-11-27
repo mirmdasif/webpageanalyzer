@@ -27,9 +27,4 @@ public class JsoupHtmlAnalyzerTest {
 
         Assert.assertEquals("-//W3C//DTD HTML 4.01//EN", htmlAnalyzer.analyzeHtml(html,"example.com").getHtmlVersion());
     }
-
-    @Test
-    public void testHtml5Version() {
-
-    }
 }
