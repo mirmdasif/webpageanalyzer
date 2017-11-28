@@ -1,4 +1,5 @@
 webpageanalyzer
+[![Build Status](https://api.travis-ci.org/mirmdasif/webpageanalyzer.svg?branch=master)](https://travis-ci.org/mirmdasif/webpageanalyzer)
 ===============
 A webpage analyzer using spring boot and jsoup
 
