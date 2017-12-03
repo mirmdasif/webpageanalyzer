@@ -1,4 +1,4 @@
-webpageanalyzer
+Web Page Analyzer
 [![Build Status](https://api.travis-ci.org/mirmdasif/webpageanalyzer.svg?branch=master)](https://travis-ci.org/mirmdasif/webpageanalyzer)
 [![codecov](https://codecov.io/gh/mirmdasif/webpageanalyzer/branch/master/graph/badge.svg)](https://codecov.io/gh/mirmdasif/webpageanalyzer)
 ===============
