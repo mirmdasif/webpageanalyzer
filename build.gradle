@@ -13,6 +13,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'jacoco'
 
 group = 'com.webpageanalyzer'
 version = '0.0.1-SNAPSHOT'
@@ -33,12 +34,21 @@ dependencies {
 	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
 
 	// Jsoup library for parsing html
-    compile group: 'org.jsoup', name: 'jsoup', version: '1.8.3'
+        compile group: 'org.jsoup', name: 'jsoup', version: '1.8.3'
 
-    // https://mvnrepository.com/artifact/com.google.guava/guava
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+        // https://mvnrepository.com/artifact/com.google.guava/guava
+        compile group: 'com.google.guava', name: 'guava', version: '19.0'
 
 	// Bootstrap
 	compile group: 'org.webjars', name: 'bootstrap', version: '3.3.5'
 
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+check.dependsOn jacocoTestReport
