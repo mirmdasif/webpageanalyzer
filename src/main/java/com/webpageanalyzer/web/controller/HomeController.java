@@ -52,4 +52,15 @@ public class HomeController {
 
         return VIEW_NAME;
     }
+
+    @ExceptionHandler(Exception.class)
+    public ModelAndView error(Exception ex) {
+        System.out.println("Forwarding error to " + VIEW_NAME );
+
+        ModelAndView model = new ModelAndView(VIEW_NAME);
+        model.addObject(CMD_NAME, new WebPageDetailsCmd());
+        model.addObject("exception", ex.getMessage());
+
+        return model;
+    }
 }

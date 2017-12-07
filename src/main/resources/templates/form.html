@@ -15,9 +15,12 @@
 
             <div class="form-group">
                 <label class="control-label">Please Enter Url Of The Page To Analyze</label>
-                <ul>
-                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}"/>
-                </ul>
+                <div th:if="${#fields.hasErrors('*')}" class="alert alert-warning">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"/>
+                    </ul>
+                </div>
+                <div th:if="${exception != null}" th:text="${exception}" class="alert alert-danger"></div>
                 <input placeholder="http://www.example.com" th:field="*{url}" class="form-control"/>
             </div>
             <input type="submit" value="Submit" class="btn btn-primary"/>
