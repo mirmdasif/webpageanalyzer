@@ -18,6 +18,7 @@ import static com.webpageanalyzer.web.TestUtils.testGetRequestView;
 @SpringBootTest(classes = WebpageanalyzerApplication.class)
 @AutoConfigureMockMvc
 public class HomeControllerIntegrationTest {
+
     @Autowired
     private MockMvc mockMvc;
 

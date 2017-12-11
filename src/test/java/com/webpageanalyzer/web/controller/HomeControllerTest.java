@@ -49,12 +49,8 @@ public class HomeControllerTest {
 
 
     @Test
-    public void homeControllerTest() throws Exception {
-
+    public void onGetRequestReturnView() throws Exception {
         testGetRequestView(mockMvc, "/", VIEW_NAME);
-        mockMvc.perform(post("/").requestAttr(CMD_NAME, new WebPageDetailsCmd()))
-                .andExpect(view().name(VIEW_NAME))
-                .andExpect(model().attribute(CMD_NAME, new InstanceOf(WebPageDetailsCmd.class)));
     }
 
     @Test
@@ -67,5 +63,15 @@ public class HomeControllerTest {
     public void onInvalidUrlShowError() throws Exception {
         mockMvc.perform(post("/").param("url", "abc.com"))
                 .andExpect(model().errorCount(1));
+    }
+
+    @Test
+    public void onValidUrlShowDetails() throws Exception {
+        mockMvc.perform(post("/").param("url", "http://www.example.com"))
+                .andExpect(model().errorCount(0))
+                .andExpect(view().name(VIEW_NAME))
+                .andExpect(model().attributeExists(CMD_NAME));
+
+
     }
 }
